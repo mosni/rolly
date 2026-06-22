@@ -1,0 +1,9 @@
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    ports: ["127.0.0.1:33012:3002"]
+    networks: [stack]
+networks:
+  stack:
+    external: true

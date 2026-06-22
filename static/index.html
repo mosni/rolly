@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Rolls</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+    </head>
+    <body style="text-align: center">
+        <div class="events">
+        </div>
+
+        <div class="controls">
+            <form onsubmit="return roll()">
+                <div class="rollcontrol">
+                    <p>
+                        <span class="inputcontainer"><input class="rollinput number" type="text" id="number" value="1">d<input value="6" class="rollinput sides" type="text" id="sides"></span><input class="rollbutton" type="submit" value="ROLL!">
+                    </p>
+                </div>
+            </form>
+
+            <div class="nameinput">
+                <input placeholder="Your Name" type="text" id="nick">
+            </div>
+
+        </div>
+
+    </body>
+      <script src="/socket.io/socket.io.js"></script>
+      <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        socket = io();
+
+        roll = function () {
+            socket.emit("roll", {"nick": nick.value, "number": number.value, "sides": sides.value})
+            return false;
+        }
+
+        socket.on("event", function (event) {
+            console.log(event);
+            if (event.type == "roll") {
+                el = "<div class='roll'>";
+                el += "  <h1>"+event.nick+" rolled "+event.sum+"</h1>";
+                el += "  <small>"+event.number+"d"+event.sides+", Rolls: "+event.rolls+"</small>";
+                el += "</div>";
+
+                $(".events").prepend(el);
+                $('.roll').attr('style','');;
+                $('.roll').first().slideDown()
+            }
+        })
+    </script>
+</html>
